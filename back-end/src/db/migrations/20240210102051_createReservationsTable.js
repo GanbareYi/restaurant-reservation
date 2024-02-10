@@ -8,7 +8,7 @@ exports.up = function(knex) {
     table.string("reservation_date");
     table.string("reservation_time");
     table.integer("people");
-    table.timeStamps(true, true);
+    table.timestamps(true, true);
   })
 };
 
