@@ -4,6 +4,7 @@ import { createReservation } from "../utils/api";
 
 function Reservation() {
     const [formData, setFormData] = useState({});
+    const [error, setError] = useState(null);
 
     const history = useHistory();
     /**
@@ -12,8 +13,17 @@ function Reservation() {
      */
     const handleSubmit = async (e) => {
         e.preventDefault();
+        try{
+            // Make API request
+            const response = await createReservation(formData);
 
-        history.push("/dashboard");
+            // If promise is resolved, reset error state to null
+            setError(null);
+            history.push("/dashboard");
+        }catch(error){
+            console.error("Error:", error);
+            setError(error.message || "An error occured");
+        }
     };
 
     // Cancel button handler. When clicked, navigate the user to the previous page.
@@ -34,6 +44,8 @@ function Reservation() {
     return (
         <div>
             <h1>NEW RESERVATION</h1>
+            {/* Display error message if error state is not null */}
+            {error && <div style={{ color: 'red' }}>{error}</div>}
             <form className="row g-3 mt-3" onSubmit={handleSubmit} >
                 {/* First Name */}
                 <div className="col-md-6" >
