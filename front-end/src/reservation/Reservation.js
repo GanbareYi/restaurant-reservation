@@ -15,7 +15,7 @@ function Reservation() {
         e.preventDefault();
         try{
             // Make API request
-            const response = await createReservation(formData);
+            await createReservation(formData);
 
             // If promise is resolved, reset error state to null
             setError(null);
@@ -35,10 +35,10 @@ function Reservation() {
         const { target } = event;
         const { name, value } = target;
 
-        setFormData = {
+        setFormData({
             ...formData,
             [name]: value
-        };
+        });
     }
 
     return (
@@ -96,7 +96,7 @@ function Reservation() {
                         name="people" 
                         value={formData.people}
                         onChange={handleChange}
-                        defaultValue={1} 
+                        placeholder={1}
                         required />
                 </div>
                 {/* Date of Reservation */}

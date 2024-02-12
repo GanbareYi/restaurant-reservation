@@ -5,3 +5,7 @@ function create(reservation) {
         .insert(reservation, ["*"])
         .then(result => result[0]);
 }
+
+module.exports = {
+    create,
+}
