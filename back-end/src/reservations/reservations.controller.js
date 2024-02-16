@@ -1,7 +1,7 @@
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const service = require("./reservations.service");
 
-const CLOSING_DAY = '2'; //Sun-0, Mon-1, Tue-2, Wed-3, Thu-4, Fri-5, Sat-6
+const CLOSING_DAY = 2; //Sun-0, Mon-1, Tue-2, Wed-3, Thu-4, Fri-5, Sat-6
 const OPENING_TIME = '09:30';
 const LAST_RESERVATION_TIME = '21:30';
 
@@ -78,7 +78,7 @@ function isWithinBusinessHour(req, res, next) {
  * Create handler for reservation resources
  */
 async function create(req, res) {
-  const data = await service.create(req.body);
+  const data = await service.create(req.body.data);
   res.status(201).json({ data });
 }
 

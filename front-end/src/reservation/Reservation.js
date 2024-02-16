@@ -1,31 +1,35 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
-import { restaurantClosedOn, dateInThePast } from "../utils/validateDate";
 import ErrorAlert from "../layout/ErrorAlert";
 
 function Reservation() {
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({
+        "first_name": "",
+        "last_name": "",
+        "mobile_number": "",
+        "people": 1,
+        "reservation_date": "",
+        "reservation_time": ""
+    });
     const [error, setError] = useState(null);
 
     const history = useHistory();
-
     
      //Submit new reservation
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try{
-            if (!error) {
-                // Make API request
-                await createReservation(formData);
+            // Make API request
+            await createReservation(formData);
 
-                // Use history.push to navigate to the Dashboard
-                history.push(`/dashboard?date=${formData.reservation_date}`);
-            }
+            // Use history.push to navigate to the Dashboard
+            history.push(`/dashboard?date=${formData.reservation_date}`);
+            
         }catch(error){
-            console.error("Error:", error);
-            setError(error.message || "An error occured");
+            console.error("Failed to create reservation! ", error);
+            setError(error);
         }
     };
 
@@ -37,10 +41,11 @@ function Reservation() {
     const handleChange= (event) => {
         const { target } = event;
         const { name, value } = target;
+        setError(null);
         
         setFormData({
             ...formData,
-            [name]: value
+            [name]: value,
         });
     }
 
