@@ -1,25 +1,28 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
+import { restaurantClosedOn, dateInThePast } from "../utils/validateDate";
+import ErrorAlert from "../layout/ErrorAlert";
 
 function Reservation() {
     const [formData, setFormData] = useState({});
     const [error, setError] = useState(null);
 
     const history = useHistory();
-    /**
-     Submit button handler. When clicked, saves the new reservation, 
-     * then displays the /dashboard page for the date of the new reservation.
-     */
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try{
-            // Make API request
-            await createReservation(formData);
 
-            // If promise is resolved, reset error state to null
-            setError(null);
-            history.push("/dashboard");
+    
+     //Submit new reservation
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        try{
+            if (!error) {
+                // Make API request
+                await createReservation(formData);
+
+                // Use history.push to navigate to the Dashboard
+                history.push(`/dashboard?date=${formData.reservation_date}`);
+            }
         }catch(error){
             console.error("Error:", error);
             setError(error.message || "An error occured");
@@ -34,7 +37,7 @@ function Reservation() {
     const handleChange= (event) => {
         const { target } = event;
         const { name, value } = target;
-
+        
         setFormData({
             ...formData,
             [name]: value
@@ -45,7 +48,7 @@ function Reservation() {
         <div>
             <h1>NEW RESERVATION</h1>
             {/* Display error message if error state is not null */}
-            {error && <div style={{ color: 'red' }}>{error}</div>}
+            <ErrorAlert error={error} />
             <form className="row g-3 mt-3" onSubmit={handleSubmit} >
                 {/* First Name */}
                 <div className="col-md-6" >
