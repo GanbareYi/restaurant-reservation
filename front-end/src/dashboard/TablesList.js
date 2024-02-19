@@ -1,14 +1,14 @@
 import React from "react";
 
 function TablesList({ tables=[] }) {
-    tables.sort(compareFn);
 
-    const rows = tables.map((table, index) => {
+    const rows = tables.map((table, index) => (
         <tr key={index}>
             <td>{table.table_name}</td>
+            <td>{table.capacity}</td>
             <td data-table-id-status={table.table_id}>{table.status}</td>
         </tr>
-    })
+    ));
 
     return (
         <div className="container row justify-content-start col-6">
@@ -16,19 +16,17 @@ function TablesList({ tables=[] }) {
                 <thead>
                     <tr>
                         <th>Table Name</th>
+                        <th>Capacity</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {/* {JSON.stringify(tables)} */}
                     {rows}
                 </tbody>
             </table>
         </div>
     );
 }
-
-const compareFn = (tbA, tbB) => {
-    return tbA.table_name.toLowerCase() - tbB.table_name.toLowerCase();
-};
 
 export default TablesList;
