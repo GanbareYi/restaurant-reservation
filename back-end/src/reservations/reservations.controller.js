@@ -87,8 +87,15 @@ async function create(req, res) {
  */
 async function list(req, res) {
   const { date } = req.query;
-  const data = await service.list(date);
-  res.json({ data });
+  
+  if (date) {
+    console.log(date);
+    const data = await service.listForDate(date);
+    res.json({ data });
+  }else {
+    const data = await service.list();
+    res.json({ data });
+  }
 }
 
 module.exports = {

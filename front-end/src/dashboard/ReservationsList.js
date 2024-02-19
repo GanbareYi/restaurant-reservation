@@ -9,8 +9,6 @@ function ReservationsList({ reservations=[] }) {
         );
     }
 
-    // reservations.sort(compareFn);
-
     const rows = reservations.map((rsv, index) => (
         <tr key={index}>
             <td>{rsv.reservation_date}</td>
@@ -20,7 +18,7 @@ function ReservationsList({ reservations=[] }) {
             <td>{rsv.mobile_number}</td>
             <td>{rsv.people}</td>
             <td>
-                <a href={`/reservations/${rsv.reservation_id}/seat`} class="btn btn-primary">Seat</a>
+                <a href={`/reservations/${rsv.reservation_id}/seat`} className="btn btn-primary">Seat</a>
             </td>
         </tr>
     ));
@@ -46,15 +44,5 @@ function ReservationsList({ reservations=[] }) {
         </div>
     );
 }
-
-const compareFn = (rsvA, rsvB) => {
-    if (rsvA.reservation_time < rsvB.reservation_time) {
-        return -1;
-    } else if (rsvA.reservation_time > rsvB.reservation_time) {
-        return 1;
-    } else {
-        return 0;
-    }
-};
 
 export default ReservationsList;

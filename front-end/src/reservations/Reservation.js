@@ -5,12 +5,12 @@ import ErrorAlert from "../layout/ErrorAlert";
 
 function Reservation() {
     const [formData, setFormData] = useState({
-        "first_name": "",
-        "last_name": "",
-        "mobile_number": "",
-        "people": 1,
-        "reservation_date": "",
-        "reservation_time": ""
+        first_name: "",
+        last_name: "",
+        mobile_number: "",
+        people: 1,
+        reservation_date: "",
+        reservation_time: ""
     });
     const [error, setError] = useState(null);
 

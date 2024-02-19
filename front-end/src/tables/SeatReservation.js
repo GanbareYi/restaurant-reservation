@@ -1,13 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
 import ErrorAlert from "../layout/ErrorAlert";
-import { saveTableAssignment } from "../utils/api";
+import { listTables, saveTableAssignment } from "../utils/api";
 
 function SeatReservation() {
     const { reservation_id } = useParams();
-    const [table, setTable] = useState({"reservation_id": Number(reservation_id)});
+    const [tables, setTables] = useState([]);
+    const [seat, setSeat] = useState({reservation_id: Number(reservation_id)});
     const [error, setError] = useState(null);
-    const tables = [];
+
+    function loadTables() {
+        const abortController = new AbortController();
+        listTables(abortController.signal)
+          .then(setTables)
+          .catch(setError);
+    
+        return () => abortController.abort();
+      }
+
+    useEffect(loadTables, []);
 
     const history = useHistory();
 
@@ -19,11 +30,12 @@ function SeatReservation() {
         event.preventDefault();
 
         try{
-            await saveTableAssignment(table);
+            await saveTableAssignment(seat);
 
             history.push("/dashboard");
         }catch(error) {
-
+            console.error(error);
+            setError(error);
         }
     }
 
@@ -31,18 +43,18 @@ function SeatReservation() {
         const { name, value } = event.target;
         setError(null);
 
-        setTable({
-            ...table,
+        setSeat({
+            ...seat,
             [name]: value
         });
 
     }
 
-    const options = tables.map((table, index) => {
+    const options = tables.map((table, index) => (
         <option key={index} value={table.table_id}>
             {table.table_name} - {table.capacity}
         </option>
-    });
+    ));
 
     return (
         <div>
@@ -53,8 +65,8 @@ function SeatReservation() {
                 <label className="form-label mr-3">
                     Table number:
                 </label>
-                <select className="form-select" name="table_id" required >
-                    <option selected>Select an option</option>
+                <select className="form-select" name="table_id" onChange={handleChange} required >
+                    <option>Select an option</option>
                     {options}
                 </select>
             </div>

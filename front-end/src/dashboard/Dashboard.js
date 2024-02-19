@@ -56,7 +56,7 @@ function Dashboard({ date }) {
       <h1 className="mt-2">Dashboard</h1>
       {/* Reservations List */}
       <div name="reservation_list">
-        <h3 className="mt-5 mb-2 ml-3">Reservations for {currentDate}</h3>
+        <h3 className="mt-5 mb-2 ml-2">Reservations for {currentDate}</h3>
         <ErrorAlert error={reservationsError} />
         <ReservationsList reservations={reservations} />
         
@@ -77,7 +77,7 @@ function Dashboard({ date }) {
       
       {/* Tables List */}
       <div name="tables_list">
-        <h3 className="mt-5 ml-3">Tables</h3>
+        <h3 className="mt-5 ml-2">Tables</h3>
         <TablesList tables={tables}/>
       </div>
     </main>

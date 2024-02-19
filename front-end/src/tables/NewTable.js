@@ -3,8 +3,11 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { createTable } from "../utils/api";
 
 function NewTable() {
-    const [newTable, setNewTable] = useState({status: "Free"});
-    const history = useHistory();
+    const [newTable, setNewTable] = useState({
+                                            status: "Free",
+                                            capacity: 1
+                                        });
+const history = useHistory();
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -41,7 +44,7 @@ function NewTable() {
 
     return (
         <div className="container-fluid col-md-8 justify-content-center">
-            <h1 className="col-md-8 mt-4 text-center">Create new table</h1>
+            <h1 className="col-md-8 mt-4 text-center">New table</h1>
             <form className="row g-3 mt-3" onSubmit={handleSubmit}>
                 {/* Table name */}
                 <div className="col-md-4">
@@ -52,6 +55,8 @@ function NewTable() {
                         type="text"
                         name="table_name"
                         minLength={2}
+                        placeholder="Table Name"
+                        value={newTable.table_name}
                         onChange={handleChange}
                         required
                         />
@@ -64,6 +69,7 @@ function NewTable() {
                     <input className="form-control"
                         type="text"
                         name="capacity"
+                        value={newTable.capacity}
                         onChange={handleChange}
                         required
                         />
