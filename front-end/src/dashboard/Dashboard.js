@@ -3,6 +3,7 @@ import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationsList from "./ReservationsList";
 import { previous, today, next } from "../utils/date-time";
+import TablesList from "./TablesList";
 /**
  * Defines the dashboard page.
  * @param date
@@ -41,22 +42,32 @@ function Dashboard({ date }) {
 
   return (
     <main>
-      <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for {currentDate}</h4>
+      <h1 className="mt-2">Dashboard</h1>
+      {/* Reservations List */}
+      <div name="reservation_list">
+        <h3 className="mt-5 mb-2 ml-3">Reservations for {currentDate}</h3>
+        <ErrorAlert error={reservationsError} />
+        <ReservationsList reservations={reservations} />
+        
+        <div className="d-flex justify-content-md-end">
+          <button id="previous" onClick={handleClick} className="btn btn-primary mr-md-2 col-1" type="button">
+              Previous
+          </button>
+          <button id="next" onClick={handleClick} className="btn btn-primary mr-md-2 col-1" type="button">
+              Next
+          </button>
+          <button id="today" onClick={handleClick} className="btn btn-primary col-1" type="button">
+              Today
+          </button>
+        </div>
       </div>
-      <ErrorAlert error={reservationsError} />
-      <ReservationsList reservations={reservations} />
-      <div className="d-flex justify-content-md-end">
-        <button id="previous" onClick={handleClick} className="btn btn-primary mr-md-2 col-1" type="button">
-            Previous
-        </button>
-        <button id="next" onClick={handleClick} className="btn btn-primary mr-md-2 col-1" type="button">
-            Next
-        </button>
-        <button id="today" onClick={handleClick} className="btn btn-primary col-1" type="button">
-            Today
-        </button>
+
+      <hr />
+      
+      {/* Tables List */}
+      <div name="tables_list">
+        <h3 className="mt-5 ml-3">Tables</h3>
+        <TablesList />
       </div>
     </main>
   );

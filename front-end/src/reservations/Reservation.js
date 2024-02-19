@@ -36,27 +36,34 @@ function Reservation() {
     // Cancel button handler. When clicked, navigate the user to the previous page.
     const handleCancel = () => {
         history.goBack();
-    }
+    };
 
     const handleChange= (event) => {
         const { target } = event;
         const { name, value } = target;
         setError(null);
         
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    }
+        if (name === "people") {
+            setFormData({
+                ...formData,
+                [name]: Number(value),
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value,
+            });
+        }
+    };
 
     return (
-        <div>
-            <h1>NEW RESERVATION</h1>
+        <div className="container-fluid col-md-10 justify-content-center">
+            <h1 className="col-md-10 mt-4 text-center">Make a reservation</h1>
             {/* Display error message if error state is not null */}
             <ErrorAlert error={error} />
             <form className="row g-3 mt-3" onSubmit={handleSubmit} >
                 {/* First Name */}
-                <div className="col-md-6" >
+                <div className="col-md-5" >
                     <label className="form-label">
                         First Name:
                     </label>
@@ -69,7 +76,7 @@ function Reservation() {
                         required />
                 </div>
                 {/* Last Name */}
-                <div className="col-md-6">
+                <div className="col-md-5">
                     <label className="form-label">
                         Last Name:
                     </label>
@@ -82,7 +89,7 @@ function Reservation() {
                         required />
                 </div>
                 {/* Mobile Number */}
-                <div className="col-md-6">
+                <div className="col-md-5">
                     <label className="form-label">
                         Mobile number:
                     </label>
@@ -95,7 +102,7 @@ function Reservation() {
                         required/>
                 </div>
                 {/* Number of People */}
-                <div className="col-md-6">
+                <div className="col-md-5">
                     <label className="form-label">
                         People:
                     </label>
@@ -108,7 +115,7 @@ function Reservation() {
                         required />
                 </div>
                 {/* Date of Reservation */}
-                <div className="col-md-6">
+                <div className="col-md-5">
                     <label className="form-label">
                         Date of reservation:
                     </label>
@@ -120,7 +127,7 @@ function Reservation() {
                         required />
                 </div>
                 {/* Time of Reservation */}
-                <div className="col-md-6">
+                <div className="col-md-5">
                     <label className="form-label">
                         Time of reservation:
                     </label>
@@ -132,7 +139,7 @@ function Reservation() {
                         required />
                 </div>
                 {/* Submit & Cancel Button */}
-                <div className="col-12 mt-3 d-md-flex justify-content-md-end">
+                <div className="col-10 mt-3 d-md-flex justify-content-md-end">
                     <button className="btn btn-primary mr-3" type="submit">
                         Submit
                     </button>

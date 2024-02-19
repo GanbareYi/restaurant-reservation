@@ -89,3 +89,38 @@ export async function createReservation(reservation, signal) {
 
   return await fetchJson(url, options);
 }
+
+export async function createTable(table, signal) {
+  const url = `${API_BASE_URL}/tables`;
+
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ data: table }),
+    signal,
+  };
+
+  return await fetchJson(url, options);
+}
+
+/**
+ * Save table assignment.
+ * @param {*} table 
+ * table info
+ * @param {*} signal 
+ * optional AbortController.signal
+ * @returns {Promise<Error|*>}
+ * a promise that resolves to the new assignment.
+ */
+export async function saveTableAssignment(table, signal) {
+  const url = `${API_BASE_URL}/tables/:table_id/seat`;
+
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: table }),
+    signal
+  };
+
+  return await fetchJson(url, options);
+}

@@ -9,7 +9,8 @@ function create(reservation) {
 function list(date) {
     return knex("reservations")
             .select("*")
-            .where({reservation_date: date});
+            .where({reservation_date: date})
+            .orderBy("reservation_time");
 }
 
 module.exports = {

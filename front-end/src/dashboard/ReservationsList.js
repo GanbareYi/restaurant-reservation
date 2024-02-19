@@ -9,7 +9,7 @@ function ReservationsList({ reservations=[] }) {
         );
     }
 
-    reservations.sort(compareFn);
+    // reservations.sort(compareFn);
 
     const rows = reservations.map((rsv, index) => (
         <tr key={index}>
@@ -19,11 +19,14 @@ function ReservationsList({ reservations=[] }) {
             <td>{rsv.last_name}</td>
             <td>{rsv.mobile_number}</td>
             <td>{rsv.people}</td>
+            <td>
+                <a href={`/reservations/${rsv.reservation_id}/seat`} class="btn btn-primary">Seat</a>
+            </td>
         </tr>
     ));
 
     return (
-        <div className="container col-12 mt-5">
+        <div className="container col-12">
             <table className="table table-hover">
                 <thead>
                     <tr>
@@ -33,6 +36,7 @@ function ReservationsList({ reservations=[] }) {
                         <th>Last Name</th>
                         <th>Mobile Number</th>
                         <th>People</th>
+                        <th>Table</th>
                     </tr>
                 </thead>
                 <tbody>
