@@ -22,6 +22,56 @@ function bodyDataHas(propertyName) {
   }
 }
 
+/**
+ * Validate if the reservation_date is a date.
+ */
+function isValidDate(req, res, next) {
+  const { reservation_date } = req.body.data;
+
+  const validDate = new Date(reservation_date);
+  if (!isNaN(validDate) && validDate.toString() !== 'Invalid Date') {
+    return next();
+  }
+
+  next({
+    status: 400,
+    message: "`reservation_date` is not a date."
+  })
+}
+
+/**
+ * Validate if the reservation_time is a time.
+ */
+function isValidTime(req, res, next) {
+  const { reservation_time } = req.body.data;
+
+  const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+
+  if (reservation_time && timeRegex.test(reservation_time)) {
+    return next();
+  }
+
+  next({
+    status: 400,
+    message: "`reservation_time` is not a time."
+  })
+}
+
+/**
+ * Validate if people is a number.
+ */
+function peopleIsNumber(req, res, next) {
+  const { people } = req.body.data;
+
+  if (typeof(people) === "number") {
+    return next();
+  }
+
+  next({
+    status: 400,
+    message: "`people` is not a number."
+  })
+}
 /***
  * Validate if a reservation date is a Tuesday as the restaurant is closed on Tuesdays. 
  */
@@ -106,6 +156,9 @@ module.exports = {
     bodyDataHas("people"),
     bodyDataHas("reservation_date"),
     bodyDataHas("reservation_time"),
+    isValidDate,
+    isValidTime,
+    peopleIsNumber,
     reservationIsInFuture,
     storeIsOpen,
     isWithinBusinessHour,
