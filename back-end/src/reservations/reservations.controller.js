@@ -2,7 +2,7 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const service = require("./reservations.service");
 
 const CLOSING_DAY = 2; //Sun-0, Mon-1, Tue-2, Wed-3, Thu-4, Fri-5, Sat-6
-const OPENING_TIME = '09:30';
+const OPENING_TIME = '10:30';
 const LAST_RESERVATION_TIME = '21:30';
 
 /**
@@ -101,7 +101,7 @@ function reservationIsInFuture(req, res, next){
   if (specificDateTime < current) {
     next({
       status: 400,
-      message: `Invalid time! ${reservation_date} ${reservation_time} is in the past.`
+      message: `Reservation must be in the future.`
     })
   } else {
     return next();

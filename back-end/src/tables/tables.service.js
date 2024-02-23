@@ -42,10 +42,19 @@ function list() {
             .orderBy("table_name");
 }
 
+function resetTableStatus(table_id) {
+    return knex("tables")
+            .update({"status": "Free",
+                     "reservation_id": null
+                    }, ["*"])
+            .where("table_id", table_id);
+}
+
 module.exports = {
     create,
     readTable,
     readReservation,
     update,
+    resetTableStatus,
     list,
 }

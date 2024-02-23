@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
 import ErrorAlert from "../layout/ErrorAlert";
-import { listTables, saveTableAssignment } from "../utils/api";
+import { listTables, saveTableAssignment, updateReservationStatus } from "../utils/api";
 
 function SeatReservation() {
     const { reservation_id } = useParams();
@@ -31,6 +31,7 @@ function SeatReservation() {
 
         try{
             await saveTableAssignment(seat);
+            await updateReservationStatus(seat.reservation_id, "seated");
 
             history.push("/dashboard");
         }catch(error) {

@@ -5,7 +5,6 @@ import { createTable } from "../utils/api";
 function NewTable() {
     const [newTable, setNewTable] = useState({
                                             status: "Free",
-                                            capacity: 1
                                         });
 const history = useHistory();
 
@@ -69,6 +68,7 @@ const history = useHistory();
                     <input className="form-control"
                         type="text"
                         name="capacity"
+                        placeholder="Reservation party size"
                         value={newTable.capacity}
                         onChange={handleChange}
                         required

@@ -130,3 +130,29 @@ export async function saveTableAssignment(seat, signal) {
 
   return await fetchJson(url, options);
 }
+
+export async function freeUpTable(table_id, signal){
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`
+
+  const options = {
+    method: "DELETE",
+    headers,
+    body: JSON.stringify({ data: {table_id} }),
+    signal
+  };
+
+  return await fetchJson(url, options);
+}
+
+export async function updateReservationStatus(reservation_id, reservation_status, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: {reservation_status}}),
+    signal
+  };
+
+  return await fetchJson(url, options);
+} 

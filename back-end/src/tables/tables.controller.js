@@ -1,6 +1,68 @@
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const service = require("./tables.service");
 
+/**
+ * Validate if the data property is present. 
+ */
+function hasData(req, res, next) {
+    const { data } = req.body;
+
+    if (data) {
+        return next();
+    }
+
+    next({
+        status: 400,
+        message: "`data` is missing."
+    })
+}
+
+/**
+ * Validate if a property is in the request.
+ */ 
+function bodyDataHas(propertyName) {
+    return function (req, res, next) {
+      const { data ={} } = req.body;
+      if (data[propertyName]) {
+        return next();
+      } else {
+        next({
+          status: 400,
+          message: `Must include a ${propertyName}.`
+        })
+      }
+    }
+}
+
+/**
+ * Validate if a table_name is at least 2 characters long.
+ */ 
+function isValidName(req, res, next) {
+    const { table_name } = req.body.data;
+
+    if (table_name && table_name.length >= 2) {
+        return next();
+    }
+
+    next({
+        status: 400,
+        message: "`table_name` can't be empty and must be at least 2 characters long."
+    })
+}
+
+function capacityIsNumber(req, res, next) {
+    const { capacity } = req.body.data;
+
+    if (typeof(capacity) === "number" && capacity > 0) {
+        return next();
+    }
+
+    next({
+        status: 400,
+        message: "`capacity` is not a number."
+    })
+}
+
 async function create(req, res) {
     const data = await service.create(req.body.data);
 
@@ -18,7 +80,7 @@ async function tableExists(req, res, next){
     }
 
     next({
-        status: 400,
+        status: 404,
         message: `Table ( ${table_id } ) doesn't exist.`
     });
 }
@@ -34,7 +96,7 @@ async function reservationExists(req, res, next){
     }
 
     next({
-        status: 400,
+        status: 404,
         message: `The reservation( ${reservation_id} )doesn't exist.`
     });
 }
@@ -84,14 +146,55 @@ async function list(req, res) {
     res.json({ data });
 }
 
+/**
+ * Validate whether a table is occupied.
+ */
+function isOccupied(req, res, next) {
+    const { table } = res.locals;
+
+    if (table.reservation_id) {
+        return next();
+    }
+
+    next({
+        status: 400,
+        message: `Table ${table.table_id} is not occupied.`
+    });
+}
+
+/**
+ * Reset table status to `Free`.
+ */
+async function destroy(req, res){
+
+    const { table } = res.locals;
+    const data = await service.resetTableStatus(table.table_id);
+
+    res.json({ data });
+}
+
 module.exports = {
-    create: asyncErrorBoundary(create),
+    create: [
+        hasData,
+        bodyDataHas("table_name"),
+        bodyDataHas("capacity"),
+        isValidName,
+        capacityIsNumber,
+        asyncErrorBoundary(create),
+    ],
     update: [
+        hasData,
+        bodyDataHas("reservation_id"),
         asyncErrorBoundary(tableExists),
         asyncErrorBoundary(reservationExists),
         validatePartyNumber,
         tableIsAvailable,
         asyncErrorBoundary(assignTable)
+    ],
+    delete: [
+        asyncErrorBoundary(tableExists),
+        isOccupied,
+        asyncErrorBoundary(destroy)
     ],
     list: asyncErrorBoundary(list),
 }

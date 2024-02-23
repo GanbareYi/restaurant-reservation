@@ -54,10 +54,10 @@ function Dashboard({ date }) {
   return (
     <main>
       <h1 className="mt-2">Dashboard</h1>
+      <ErrorAlert error={reservationsError} />
       {/* Reservations List */}
       <div name="reservation_list">
         <h3 className="mt-5 mb-2 ml-2">Reservations for {currentDate}</h3>
-        <ErrorAlert error={reservationsError} />
         <ReservationsList reservations={reservations} />
         
         <div className="d-flex justify-content-md-end">
@@ -78,7 +78,11 @@ function Dashboard({ date }) {
       {/* Tables List */}
       <div name="tables_list">
         <h3 className="mt-5 ml-2">Tables</h3>
-        <TablesList tables={tables}/>
+        <TablesList 
+          tables={tables} 
+          setError={setReservationsError} 
+          loadTables={loadTables} 
+        />
       </div>
     </main>
   );
