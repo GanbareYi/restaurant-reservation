@@ -1,7 +1,7 @@
 import React from "react";
 import { freeUpTable } from "../utils/api";
 
-function TablesList({ tables=[], setError, loadTables }) {
+function TablesList({ tables=[], setError, loadTables, loadDashboard }) {
 
     const handleFinish = async (table_id) => {
         setError(null);
@@ -11,6 +11,7 @@ function TablesList({ tables=[], setError, loadTables }) {
                 try{
                     await freeUpTable(table_id);
                     loadTables();
+                    loadDashboard();
                 }catch(error){
                     console.error("Free up table failed! ", error);
                     setError(error);

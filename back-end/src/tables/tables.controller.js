@@ -136,7 +136,7 @@ async function assignTable(req, res) {
     table.status = "Occupied";
     table.reservation_id = reservation_id;
 
-    const data = await service.update(table);
+    const data = await service.updateTableToSeated(table);
     res.json({ data });
 }
 
@@ -168,9 +168,9 @@ function isOccupied(req, res, next) {
 async function destroy(req, res){
 
     const { table } = res.locals;
-    const data = await service.resetTableStatus(table.table_id);
+    const data = await service.resetTableStatus(table.table_id, table.reservation_id);
 
-    res.json({ data });
+    res.status(200).json({ data });
 }
 
 module.exports = {

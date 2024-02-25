@@ -1,15 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-function ReservationsList({ reservations=[] }) {
-    if (reservations.length === 0) {
-        return (
-            <div>
-                <p>No reservations in the day.</p>
-            </div>
-        );
-    }
-
-    const rows = reservations.map((rsv) => (
+function ReservationsList({ reservations=[] }) {    
+    const rows = reservations
+                    .filter(rsv => rsv.status !== "finished")
+                    .map((rsv) => (
         <tr key={rsv.reservation_id}>
             <td>{rsv.reservation_date}</td>
             <td>{rsv.reservation_time}</td>
@@ -19,14 +14,13 @@ function ReservationsList({ reservations=[] }) {
             <td>{rsv.mobile_number}</td>
             <td>{rsv.people}</td>
             <td data-reservation-id-status={rsv.reservation_id}>
-                {rsv.reservation_status}</td>
+                {rsv.status}</td>
             <td>
-                {rsv.reservation_status === "booked" ?
-                    (<Link to={`/reservations/${rsv.reservation_id}/seat`} >
-                        <button className="btn btn-primary">
-                            Seat
-                        </button>
-                    </Link>)
+                {!rsv.status || rsv.status === "booked" ?
+                    (<a href={`/reservations/${rsv.reservation_id}/seat`} 
+                        className="btn btn-primary" >
+                        Seat
+                    </a>)
                     :
                     null
                 }

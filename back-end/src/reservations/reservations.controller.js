@@ -132,6 +132,71 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+async function reservationExists(req, res, next) {
+  const { reservation_id } = req.params;
+
+  const reservation = await service.read(reservation_id);
+
+    if (reservation) {
+        res.locals.reservation = reservation;
+        return next();
+    }
+
+    next({
+        status: 404,
+        message: `The reservation( ${reservation_id} )doesn't exist.`
+    });
+}
+
+function checkStatus(req, res, next){
+  const { status } = req.body.data;
+
+  const { reservation } = res.locals;
+
+  if (req.method === "POST"){
+    if (status === "seated" || status === "finished"){
+        next({
+          status: 400,
+          message: `Reservation status must not be ${status}.`
+        });
+      }
+  }
+
+  if (req.method === "PUT"){
+    if (!status || status === "unknown") {
+      next({
+        status: 400,
+        message: "Reservation status is unknown."
+      });
+    }
+  }
+
+  return next();
+}
+
+function reservationFinished(req, res, next) {
+  const { reservation } = res.locals;
+
+  if (reservation.status === "finished") {
+    next({
+      status: 400,
+      message: "A finished reservation cannot be updated."
+    })
+  }
+
+  return next();
+}
+
+async function updateStatus(req, res) {
+  const { status } = req.body.data;
+  const { reservation } = res.locals;
+
+  const data = await service.setReservationStatus(reservation.reservation_id,
+                                                  status);
+
+  res.status(200).json({data});
+}
+
 /**
  * List handler for reservation resources
  */
@@ -139,7 +204,6 @@ async function list(req, res) {
   const { date } = req.query;
   
   if (date) {
-    console.log(date);
     const data = await service.listForDate(date);
     res.json({ data });
   }else {
@@ -156,6 +220,8 @@ module.exports = {
     bodyDataHas("people"),
     bodyDataHas("reservation_date"),
     bodyDataHas("reservation_time"),
+    bodyDataHas("status"),
+    checkStatus,
     isValidDate,
     isValidTime,
     peopleIsNumber,
@@ -163,6 +229,12 @@ module.exports = {
     storeIsOpen,
     isWithinBusinessHour,
     asyncErrorBoundary(create)
+  ],
+  update: [
+    asyncErrorBoundary(reservationExists),
+    checkStatus,
+    reservationFinished,
+    asyncErrorBoundary(updateStatus)
   ],
   list: asyncErrorBoundary(list),
 };

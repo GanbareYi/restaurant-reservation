@@ -29,11 +29,26 @@ function readReservation(reservation_id) {
 
 }
 
-function update(table) {
-    return knex("tables")
-            .update(table, "*")
-            .where("table_id", table.table_id)
-            .then(result => result[0]);
+async function updateTableToSeated(table) {
+    
+    try {
+        await knex.transaction(async (trx) =>{
+            await trx("tables")
+                .update(table, "*")
+                .where("table_id", table.table_id);
+
+            const result = await trx("reservations")
+                            .update({
+                                "status": "seated"
+                            })
+                            .where("reservation_id", table.reservation_id);
+
+            await trx.commit();
+            return result;
+        });
+    }catch(error) {
+        console.error("Assign table failed!", error);
+    }
 }
 
 function list() {
@@ -42,19 +57,35 @@ function list() {
             .orderBy("table_name");
 }
 
-function resetTableStatus(table_id) {
-    return knex("tables")
-            .update({"status": "Free",
-                     "reservation_id": null
-                    }, ["*"])
-            .where("table_id", table_id);
+async function resetTableStatus(table_id, reservation_id) {
+    
+    try {
+        await knex.transaction(async (trx) =>{
+            await trx("tables")
+                .update({"status": "Free",
+                        "reservation_id": null
+                        }, ["*"])
+                .where({"table_id": table_id});
+
+            const result = await trx("reservations")
+                            .update({
+                                "status": "finished"
+                            })
+                            .where("reservation_id", reservation_id);
+
+            await trx.commit();
+            return result;
+        });
+    }catch(error) {
+        console.error("Updating table status or reservation status failed!", error);
+    }
 }
 
 module.exports = {
     create,
     readTable,
     readReservation,
-    update,
+    updateTableToSeated,
     resetTableStatus,
     list,
 }

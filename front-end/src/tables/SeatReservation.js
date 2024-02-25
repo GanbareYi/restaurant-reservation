@@ -31,7 +31,6 @@ function SeatReservation() {
 
         try{
             await saveTableAssignment(seat);
-            await updateReservationStatus(seat.reservation_id, "seated");
 
             history.push("/dashboard");
         }catch(error) {
