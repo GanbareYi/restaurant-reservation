@@ -212,6 +212,12 @@ async function list(req, res) {
   }
 }
 
+function read(req, res) {
+  const { reservation } = res.locals;
+
+  res.json({ data: reservation });
+}
+
 module.exports = {
   create: [
     bodyDataHas("first_name"),
@@ -237,4 +243,5 @@ module.exports = {
     asyncErrorBoundary(updateStatus)
   ],
   list: asyncErrorBoundary(list),
+  read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)]
 };

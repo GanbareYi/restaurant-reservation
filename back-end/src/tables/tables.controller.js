@@ -162,6 +162,19 @@ function isOccupied(req, res, next) {
     });
 }
 
+function reservationSeated(req, res, next) {
+    const { reservation } = res.locals;
+
+    if (reservation.status === "seated") {
+        next({
+            status: 400,
+            message: "Reservation is already 'seated'"
+        })
+    }
+
+    return next();
+}
+
 /**
  * Reset table status to `Free`.
  */
@@ -187,6 +200,7 @@ module.exports = {
         bodyDataHas("reservation_id"),
         asyncErrorBoundary(tableExists),
         asyncErrorBoundary(reservationExists),
+        reservationSeated,
         validatePartyNumber,
         tableIsAvailable,
         asyncErrorBoundary(assignTable)
