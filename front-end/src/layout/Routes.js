@@ -8,6 +8,7 @@ import { today } from "../utils/date-time";
 import useQuery from "../utils/useQuery";
 import NewTable from "../tables/NewTable";
 import SeatReservation from "../tables/SeatReservation";
+import SearchReservation from "../reservations/searchReservation";
 
 /**
  * Defines all the routes for the application.
@@ -28,6 +29,10 @@ function Routes() {
       </Route>
       <Route path="/dashboard">
         <Dashboard date={date? date : today()} />
+      </Route>
+
+      <Route path ="/search">
+        <SearchReservation />
       </Route>
 
       {/* Reservations */}

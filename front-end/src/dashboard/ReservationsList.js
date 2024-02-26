@@ -1,10 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
-function ReservationsList({ reservations=[] }) {    
-    const rows = reservations
-                    .filter(rsv => rsv.status !== "finished")
-                    .map((rsv) => (
+function ReservationsList({ reservations=[] }) {  
+    
+    const rows = reservations.map((rsv) => (
         <tr key={rsv.reservation_id}>
             <td>{rsv.reservation_date}</td>
             <td>{rsv.reservation_time}</td>
