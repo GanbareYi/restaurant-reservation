@@ -114,7 +114,7 @@ function reservationIsInFuture(req, res, next){
 function isWithinBusinessHour(req, res, next) {
   const { reservation_time } = req.body.data;
 
-  if (reservation_time > OPENING_TIME && reservation_time < LAST_RESERVATION_TIME) {
+  if (reservation_time >= OPENING_TIME && reservation_time <= LAST_RESERVATION_TIME) {
       return next();
   } else {
     next({

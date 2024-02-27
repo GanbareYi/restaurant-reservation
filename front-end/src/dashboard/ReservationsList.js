@@ -1,6 +1,27 @@
 import React from "react";
+import { updateReservationStatus } from "../utils/api";
 
-function ReservationsList({ reservations=[] }) {  
+function ReservationsList({ reservations=[], loadDashboard, setError }) {  
+    const handleClick = async (reservation_id) => {
+        const abortController = new AbortController();
+        setError(null);
+
+        if (window.confirm(
+            "Do you want to cancel this reservation? This cannot be undone.")){
+                try{
+                    await updateReservationStatus(
+                            reservation_id, 
+                            "cancelled", 
+                            abortController.signal);
+                    loadDashboard();
+                } catch (error) {
+                    console.error("Cancelling reservation failed!", error);
+                    setError(error);
+                } finally {
+                    abortController.abort();
+                }
+        }
+    }
     
     const rows = reservations.map((rsv) => (
         <tr key={rsv.reservation_id}>
@@ -23,6 +44,26 @@ function ReservationsList({ reservations=[] }) {
                     null
                 }
             </td>
+            <td>
+                {rsv.status === "booked" ? 
+                    (<a href={`/reservations/${rsv.reservation_id}/edit`}
+                        className="btn btn-primary">
+                        Edit
+                    </a>)
+                    :
+                    null
+                }
+            </td>
+            <td data-reservation-id-cancel={rsv.reservation_id}>
+                {rsv.status === "booked" ? 
+                    (<button className="btn btn-primary"
+                            onClick={() => handleClick(rsv.reservation_id)}>
+                        Cancel
+                    </button>)
+                    :
+                    null
+                }
+            </td>
         </tr>
     ));
 
@@ -39,7 +80,9 @@ function ReservationsList({ reservations=[] }) {
                         <th>Mobile Number</th>
                         <th>People</th>
                         <th>Status</th>
-                        <th>Action</th>
+                        <th>Seat</th>
+                        <th>Edit</th>
+                        <th>Cancel</th>
                     </tr>
                 </thead>
                 <tbody>

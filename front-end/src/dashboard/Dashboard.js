@@ -58,7 +58,9 @@ function Dashboard({ date }) {
       {/* Reservations List */}
       <div name="reservation_list">
         <h3 className="mt-5 mb-2 ml-2">Reservations for {currentDate}</h3>
-        <ReservationsList reservations={reservations} />
+        <ReservationsList reservations={reservations} 
+                          loadDashboard={loadDashboard}
+                          setError={setReservationsError}/>
         
         <div className="d-flex justify-content-md-end">
           <button id="previous" onClick={handleClick} className="btn btn-primary mr-md-2 col-1" type="button">
