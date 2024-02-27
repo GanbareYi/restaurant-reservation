@@ -16,7 +16,8 @@ function read(id) {
 function update(reservation_id, reservation) {
     return knex("reservations")
             .update(reservation, ["*"])
-            .where({"reservation_id": reservation_id});
+            .where({"reservation_id": reservation_id})
+            .then(result=>result[0]);
 }
 
 function listForDate(date) {

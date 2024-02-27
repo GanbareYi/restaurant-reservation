@@ -250,21 +250,19 @@ module.exports = {
     asyncErrorBoundary(create)
   ],
   update: [
+    asyncErrorBoundary(reservationExists),
     bodyDataHas("first_name"),
     bodyDataHas("last_name"),
     bodyDataHas("mobile_number"),
     bodyDataHas("people"),
     bodyDataHas("reservation_date"),
     bodyDataHas("reservation_time"),
-    bodyDataHas("status"),
-    checkStatus,
     isValidDate,
     isValidTime,
     peopleIsNumber,
     reservationIsInFuture,
     storeIsOpen,
     isWithinBusinessHour,
-    asyncErrorBoundary(reservationExists),
     asyncErrorBoundary(update)
   ],
   updateStatus: [
