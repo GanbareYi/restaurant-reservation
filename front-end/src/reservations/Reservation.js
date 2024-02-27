@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
-import { createReservation } from "../utils/api";
+import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
+import { createReservation, retrieveReservation, editReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 
 function Reservation() {
@@ -8,28 +8,51 @@ function Reservation() {
         first_name: "",
         last_name: "",
         mobile_number: "",
-        people: 1,
+        people: 0,
         reservation_date: "",
         reservation_time: "",
         status: "booked"
     });
     const [error, setError] = useState(null);
-
     const history = useHistory();
+
+    const { reservation_id } = useParams();
+    const abortController = new AbortController();
     
-     //Submit new reservation
+    useEffect(()=> {
+        async function loadReservation() {
+            try{
+                const reservation = await retrieveReservation(reservation_id, abortController.signal);
+                setFormData(reservation);
+            }catch(error){
+                console.error(`Cannot retrieve reservation (${reservation_id}).`, error);
+                setError(error);
+            }
+        }
+
+        if (reservation_id) loadReservation();
+
+        return () => abortController.abort();
+    }, [reservation_id]);
+    
+     //Submit new or edited reservation
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try{
-            // Make API request
-            await createReservation(formData);
+            if (reservation_id){
+                //Make PUT request
+                await editReservation(formData);
+            }else{
+                // Make POST request
+                await createReservation(formData);
+            }
 
             // Use history.push to navigate to the Dashboard
             history.push(`/dashboard?date=${formData.reservation_date}`);
             
         }catch(error){
-            console.error("Failed to create reservation! ", error);
+            console.error("Failed to create/edit reservation! ", error);
             setError(error);
         }
     };

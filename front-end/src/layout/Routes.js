@@ -45,6 +45,9 @@ function Routes() {
       <Route path="/reservations/:reservation_id/seat">
         <SeatReservation />
       </Route>
+      <Route path="/reservations/:reservation_id/edit">
+        <Reservation />
+      </Route>
 
       {/* Tables */}
       <Route path="/tables/new" >

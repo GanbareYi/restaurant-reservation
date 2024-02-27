@@ -198,6 +198,17 @@ async function updateStatus(req, res) {
 }
 
 /**
+ * Update reservation info
+ */
+async function update(req, res) {
+  const { reservation_id } = res.locals.reservation;
+  const reservation = req.body.data;
+
+  const data = await service.update(reservation_id, reservation);
+  res.json({data});
+}
+
+/**
  * List handler for reservation resources
  */
 async function list(req, res) {
@@ -239,6 +250,24 @@ module.exports = {
     asyncErrorBoundary(create)
   ],
   update: [
+    bodyDataHas("first_name"),
+    bodyDataHas("last_name"),
+    bodyDataHas("mobile_number"),
+    bodyDataHas("people"),
+    bodyDataHas("reservation_date"),
+    bodyDataHas("reservation_time"),
+    bodyDataHas("status"),
+    checkStatus,
+    isValidDate,
+    isValidTime,
+    peopleIsNumber,
+    reservationIsInFuture,
+    storeIsOpen,
+    isWithinBusinessHour,
+    asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(update)
+  ],
+  updateStatus: [
     asyncErrorBoundary(reservationExists),
     checkStatus,
     reservationFinished,
