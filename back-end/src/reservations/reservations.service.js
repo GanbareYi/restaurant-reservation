@@ -23,8 +23,8 @@ function update(reservation_id, reservation) {
 function listForDate(date) {
     return knex("reservations")
             .select("*")
-            .where({"reservation_date": date})
-            .whereNot({"status": "finished"})
+            .whereRaw('reservation_date::date = to_date(?, \'YYYY-MM-DD\')', [date])
+            .where((builder) => builder.whereNot('status', "finished").orWhereNull('status'))
             .orderBy("reservation_time");
 }
 
