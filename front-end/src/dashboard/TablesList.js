@@ -1,22 +1,29 @@
 import React from "react";
 import { freeUpTable } from "../utils/api";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 function TablesList({ tables=[], setError, loadTables, loadDashboard }) {
 
-    const handleFinish = async (table_id) => {
+    const history = useHistory();
+
+    const handleFinish = async (event) => {
+        event.preventDefault();
+        const abortController = new AbortController();
         setError(null);
         if (window.confirm(
             "Is this table ready to seat new guests? This cannot be undone."
             )){
                 try{
-                    await freeUpTable(table_id);
-                    loadTables();
-                    loadDashboard();
+                    await freeUpTable(event.target.value, abortController.signal);
+                    // loadTables();
+                    // loadDashboard();
+                    history.push("/");
                 }catch(error){
                     console.error("Free up table failed! ", error);
                     setError(error);
                 }
             }
+        return () => abortController.abort();
     };
 
     const rows = tables.map((table) => (
@@ -25,13 +32,14 @@ function TablesList({ tables=[], setError, loadTables, loadDashboard }) {
             <td>{table.capacity}</td>
             <td>{table.reservation_id}</td>
             <td data-table-id-status={table.table_id}>
-                {table.status ? table.status: "Free"}
+                {table.reservation_id ? "occupied": "free"}
             </td>
             <td>
-                {table.status==="Occupied"? 
+                {table.reservation_id ? 
                     (<button className="btn btn-primary" 
-                            data-table-id-finish="${table.table_id}"
-                            onClick={() => handleFinish(table.table_id)}
+                            data-table-id-finish={table.table_id}
+                            onClick={handleFinish}
+                            value={table.table_id}
                     >
                         Finish
                     </button>)
