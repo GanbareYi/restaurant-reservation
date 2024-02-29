@@ -62,7 +62,7 @@ async function resetTableStatus(table_id, reservation_id) {
     try {
         await knex.transaction(async (trx) =>{
             await trx("tables")
-                .update({"status": "Free",
+                .update({"status": "free",
                         "reservation_id": null
                         }, ["*"])
                 .where({"table_id": table_id});

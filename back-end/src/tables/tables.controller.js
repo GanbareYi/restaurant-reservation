@@ -118,7 +118,7 @@ function validatePartyNumber(req, res, next) {
 function tableIsAvailable(req, res, next){
     const { table } = res.locals;
 
-    if (table.status === "Occupied") {
+    if (table.status === "occupied") {
         next({
             status: 400,
             message: `Table (${table.table_name}) is occupied.`
@@ -133,7 +133,7 @@ async function assignTable(req, res) {
     const table = res.locals.table;
     const { reservation_id } = req.body.data;
 
-    table.status = "Occupied";
+    table.status = "occupied";
     table.reservation_id = reservation_id;
 
     const data = await service.updateTableToSeated(table);
