@@ -24,7 +24,8 @@ function listForDate(date) {
     return knex("reservations")
             .select("*")
             .whereRaw('reservation_date::date = to_date(?, \'YYYY-MM-DD\')', [date])
-            .where((builder) => builder.whereNot('status', "finished").orWhereNull('status'))
+            // .where((builder) => builder.whereNot('status', "finished").orWhereNull('status'))
+            .whereNot({"status": "finished"})
             .orderBy("reservation_time");
 }
 
