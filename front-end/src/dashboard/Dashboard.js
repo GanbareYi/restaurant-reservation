@@ -83,8 +83,6 @@ function Dashboard({ date }) {
         <TablesList 
           tables={tables} 
           setError={setReservationsError} 
-          loadTables={loadTables} 
-          loadDashboard = {loadDashboard}
         />
       </div>
     </main>

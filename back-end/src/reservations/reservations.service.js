@@ -26,6 +26,7 @@ function listForDate(date) {
             .whereRaw('reservation_date::date = to_date(?, \'YYYY-MM-DD\')', [date])
             // .where((builder) => builder.whereNot('status', "finished").orWhereNull('status'))
             .whereNot({"status": "finished"})
+            .andWhereNot({"status": "cancelled"})
             .orderBy("reservation_time");
 }
 

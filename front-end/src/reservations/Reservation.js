@@ -38,14 +38,15 @@ function Reservation() {
      //Submit new or edited reservation
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const abortController = new AbortController();
 
         try{
             if (reservation_id){
                 //Make PUT request
-                await editReservation(formData);
+                await editReservation(formData, abortController.signal);
             }else{
                 // Make POST request
-                await createReservation(formData);
+                await createReservation(formData, abortController.signal);
             }
 
             // Use history.push to navigate to the Dashboard
@@ -54,6 +55,8 @@ function Reservation() {
         }catch(error){
             console.error("Failed to create/edit reservation! ", error);
             setError(error);
+        }finally{
+            abortController.abort();
         }
     };
 

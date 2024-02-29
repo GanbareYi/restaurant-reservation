@@ -2,7 +2,7 @@ import React from "react";
 import { freeUpTable } from "../utils/api";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
-function TablesList({ tables=[], setError, loadTables, loadDashboard }) {
+function TablesList({ tables=[], setError }) {
 
     const history = useHistory();
 
@@ -15,8 +15,6 @@ function TablesList({ tables=[], setError, loadTables, loadDashboard }) {
             )){
                 try{
                     await freeUpTable(event.target.value, abortController.signal);
-                    // loadTables();
-                    // loadDashboard();
                     history.push("/");
                 }catch(error){
                     console.error("Free up table failed! ", error);
@@ -63,7 +61,6 @@ function TablesList({ tables=[], setError, loadTables, loadDashboard }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {/* {JSON.stringify(tables)} */}
                     {rows}
                 </tbody>
             </table>

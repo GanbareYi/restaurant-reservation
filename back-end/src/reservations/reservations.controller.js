@@ -45,7 +45,7 @@ function isValidDate(req, res, next) {
 function isValidTime(req, res, next) {
   const { reservation_time } = req.body.data;
 
-  const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+  const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/;
 
   if (reservation_time && timeRegex.test(reservation_time)) {
     return next();
