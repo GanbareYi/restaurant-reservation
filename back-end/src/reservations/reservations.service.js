@@ -30,7 +30,10 @@ function listForDate(date) {
 
 function list() {
     return knex("reservations")
-            .select("*");
+            .select("*")
+            .whereNot({"status": "finished"})
+            .andWhereNot({"status": "cancelled"})
+            .orderBy("reservation_time");
 }
 
 function setReservationStatus(id, status) {

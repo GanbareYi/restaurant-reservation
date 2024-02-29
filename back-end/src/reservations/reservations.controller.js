@@ -232,6 +232,7 @@ function read(req, res) {
 }
 
 module.exports = {
+  list: asyncErrorBoundary(list),
   create: [
     bodyDataHas("first_name"),
     bodyDataHas("last_name"),
@@ -239,14 +240,13 @@ module.exports = {
     bodyDataHas("people"),
     bodyDataHas("reservation_date"),
     bodyDataHas("reservation_time"),
-    bodyDataHas("status"),
-    checkStatus,
     isValidDate,
     isValidTime,
     peopleIsNumber,
     reservationIsInFuture,
     storeIsOpen,
     isWithinBusinessHour,
+    checkStatus,
     asyncErrorBoundary(create)
   ],
   update: [
@@ -271,6 +271,5 @@ module.exports = {
     reservationFinished,
     asyncErrorBoundary(updateStatus)
   ],
-  list: asyncErrorBoundary(list),
   read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)]
 };

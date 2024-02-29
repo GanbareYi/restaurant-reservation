@@ -27,9 +27,10 @@ function TablesList({ tables=[], setError, loadTables, loadDashboard }) {
             <td data-table-id-status={table.table_id}>
                 {table.status ? table.status: "Free"}
             </td>
-            <td data-table-id-finish={table.table_id}>
+            <td>
                 {table.status==="Occupied"? 
                     (<button className="btn btn-primary" 
+                            data-table-id-finish="${table.table_id}"
                             onClick={() => handleFinish(table.table_id)}
                     >
                         Finish

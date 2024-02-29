@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { updateReservationStatus } from "../utils/api";
 
 function ReservationsList({ reservations=[], loadDashboard, setError }) {  
@@ -23,41 +24,39 @@ function ReservationsList({ reservations=[], loadDashboard, setError }) {
         }
     }
     
-    const rows = reservations.map((rsv) => (
-        <tr key={rsv.reservation_id}>
-            <td>{rsv.reservation_date}</td>
-            <td>{rsv.reservation_time}</td>
-            <td>{rsv.reservation_id}</td>
-            <td>{rsv.first_name}</td>
-            <td>{rsv.last_name}</td>
-            <td>{rsv.mobile_number}</td>
-            <td>{rsv.people}</td>
-            <td data-reservation-id-status={rsv.reservation_id}>
-                {rsv.status}</td>
+    const rows = reservations.map((reservation) => (
+        <tr key={reservation.reservation_id}>
+            <td>{reservation.reservation_date}</td>
+            <td>{reservation.reservation_time}</td>
+            <td>{reservation.reservation_id}</td>
+            <td>{reservation.first_name}</td>
+            <td>{reservation.last_name}</td>
+            <td>{reservation.mobile_number}</td>
+            <td>{reservation.people}</td>
+            <td data-reservation-id-status={reservation.reservation_id}>
+                {reservation.status}</td>
             <td>
-                {!rsv.status || rsv.status === "booked" ?
-                    (<a href={`/reservations/${rsv.reservation_id}/seat`} 
-                        className="btn btn-primary" >
-                        Seat
-                    </a>)
+                {!reservation.status || reservation.status === "booked" ?
+                    (<Link to={`/reservations/${reservation.reservation_id}/seat`} >
+                        <button className="btn btn-primary">Seat</button>
+                    </Link>)
                     :
                     null
                 }
             </td>
             <td>
-                {rsv.status === "booked" ? 
-                    (<a href={`/reservations/${rsv.reservation_id}/edit`}
-                        className="btn btn-primary">
-                        Edit
-                    </a>)
+                {reservation.status === "booked" ? 
+                    (<Link to={`/reservations/${reservation.reservation_id}/edit`} >
+                        <button className="btn btn-primary">Edit</button>
+                    </Link>)
                     :
                     null
                 }
             </td>
-            <td data-reservation-id-cancel={rsv.reservation_id}>
-                {rsv.status === "booked" ? 
+            <td data-reservation-id-cancel={reservation.reservation_id}>
+                {reservation.status === "booked" ? 
                     (<button className="btn btn-primary"
-                            onClick={() => handleClick(rsv.reservation_id)}>
+                            onClick={() => handleClick(reservation.reservation_id)}>
                         Cancel
                     </button>)
                     :
