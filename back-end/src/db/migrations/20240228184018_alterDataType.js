@@ -9,7 +9,7 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-    return knex.schema.alterTable('your_table', function (table) {
+    return knex.schema.alterTable('reservations', function (table) {
         // revert the change in the down migration
         table.string('reservation_date').alter();
         // revert the change in the down migration
