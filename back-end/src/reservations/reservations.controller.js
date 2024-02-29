@@ -93,18 +93,17 @@ function storeIsOpen(req, res, next) {
  * Validate if a reservation time is in the past.
  */
 function reservationIsInFuture(req, res, next){
-  const current = new Date();
 
   const { reservation_date, reservation_time } = req.body.data;
-  const specificDateTime = new Date(`${reservation_date}T${reservation_time}`);
+  const specificDateTime = new Date(`${reservation_date} ${reservation_time}`).valueOf();
 
-  if (specificDateTime < current) {
+  if (specificDateTime > Date.now()) {
+    return next();
+  } else {
     next({
       status: 400,
       message: `Reservation must be in the future.`
-    })
-  } else {
-    return next();
+    });
   }
 }
 
