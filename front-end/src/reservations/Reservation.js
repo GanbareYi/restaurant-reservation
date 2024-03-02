@@ -121,7 +121,7 @@ function Reservation() {
                         Mobile number:
                     </label>
                     <input className="form-control" 
-                        type="text" 
+                        type="number" 
                         name="mobile_number" 
                         value={formData.mobile_number}
                         onChange={handleChange}
@@ -134,7 +134,7 @@ function Reservation() {
                         People:
                     </label>
                     <input className="form-control"
-                        type="text"
+                        type="number"
                         name="people" 
                         value={formData.people}
                         onChange={handleChange}
